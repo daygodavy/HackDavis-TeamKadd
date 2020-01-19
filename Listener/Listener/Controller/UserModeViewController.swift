@@ -29,44 +29,45 @@ class UserModeViewController: UIViewController {
         let idx = userMode.firstIndex(of: sender)!
         switch idx {
         case 0:
-            currUser.listenerMode = true
+            currUser.listenerMode = "1"
         case 1:
-            currUser.listenerMode = false
+            currUser.listenerMode = "0"
         default:
             break
         }
         // store user mode into firebase
-        storeUserMode(userMode: currUser.listenerMode)
+//        storeUserMode(userMode: currUser.listenerMode)
+        navigateToUserModeVC(mode: currUser.listenerMode)
     }
 
-    func storeUserMode(userMode: Bool) {
-        if let uid = user?.uid {
-            let users = self.rootRef.child("users")
-            users.child(uid).updateChildValues(["ListenerMode" : userMode])
-        }
-        if !userMode {
-            // put speaker into chatroom
-            navigateToUserModeVC()
-        }
-        else {
-            // connect the listeners to a speaker chatroom
-        }
-    }
+//    func storeUserMode(userMode: Bool) {
+////        if let uid = user?.uid {
+////            let users = self.rootRef.child("users")
+////            users.child(uid).updateChildValues(["ListenerMode" : userMode])
+////        }
+//        if !userMode {
+//            // put speaker into chatroom
+//            navigateToUserModeVC(mode: userMode)
+//        }
+//        else {
+//            findActiveSpeaker()
+//            // connect the listeners to a speaker chatroom
+//        }
+//    }
     
-    func navigateToUserModeVC() {
+    func navigateToUserModeVC(mode: String) {
         let sb = UIStoryboard(name: "Main", bundle: nil)
-        let nextView = storyboard?.instantiateViewController(identifier: "ChatViewController")
+        let nextView = sb.instantiateViewController(identifier: "ChatViewController")
 
         let chatVC = nextView as! ChatViewController
+        chatVC.listenerMode = mode
         chatVC.modalPresentationStyle = .fullScreen
         self.present(chatVC, animated: true, completion: nil)
-        
-        
-//        let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController") as? UITabBarController
-//
-//        self.view.window?.rootViewController = homeViewController
-//        self.view.window?.makeKeyAndVisible()
     }
+    
+//    func findActiveSpeaker() {
+//
+//    }
     
     
     

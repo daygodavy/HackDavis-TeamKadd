@@ -25,7 +25,11 @@ class ChatViewController: UIViewController {
     let rootRef = Database.database().reference(fromURL: "https://teamkaddhackdavis2020.firebaseio.com/")
     var user = Auth.auth().currentUser
     
-    
+    var currUser = User()
+    var listenerMode: String = "0"
+    var currStatus: String = "1"
+    var chatOccupied: String = "0"
+    var LM_UA_OCC: String = "000"
     
     var sentMessages = [Message]()
     var receivedMessages = [Message]()
@@ -44,7 +48,10 @@ class ChatViewController: UIViewController {
         messageView.layer.cornerRadius = 15.0
         addObservers()
         enableActivityMonitor()
-        setUserStatus(status: true)
+        configUserChat()
+        // FOR SPEAKER: FIRST EMPTY MESSAGE WITH FLAGS
+
+//        setUserStatus(status: true)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -64,6 +71,7 @@ class ChatViewController: UIViewController {
         conversation.insert(message, at: 0)
         tableView.reloadData()
         messageTF.text = ""
+        storeMessage(message: text)
         generateMessage()
     }
     
@@ -93,25 +101,113 @@ class ChatViewController: UIViewController {
         tableView.reloadData()
     }
     
+    func storeMessage(message: String) {
+        currUser.messageCount += 1
+            if let user = user?.uid {
+                let chat = self.rootRef.child("chat").childByAutoId()
+    //            chat.childByAutoId()
+                LM_UA_OCC = listenerMode + currStatus + chatOccupied
+                chat.updateChildValues(["UID" : user])
+                //***** CHANGE OCCUPIED WHEN CONNECTED
+                chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
+//                chat.updateChildValues(["ListenerMode" : listenerMode])
+//                chat.updateChildValues(["UserActive" : currStatus])
+                // no text first message?
+                chat.updateChildValues(["Text" : message])
+                chat.updateChildValues(["MessageCount" : currUser.messageCount])
+//                chat.updateChildValues(["Occupied" : false])
+            }
+    }
+    
+    func configUserChat() {
+        LM_UA_OCC = listenerMode + currStatus + chatOccupied
+        // FOR SPEAKER: FIRST EMPTY MESSAGE WITH FLAGS
+        if listenerMode == "1" {
+            // configure listener
+            findActiveSpeaker()
+//            configListener()
+        }
+        else {
+            // configure speaker
+            configSpeaker()
+        }
+    }
+    
+    func findActiveSpeaker() {
+        let chat = self.rootRef.child("chat")
+        chat.queryOrdered(byChild: "LM_UA_OCC").queryEqual(toValue: "010").observeSingleEvent(of: DataEventType.value) { (snapshot) in
+            for child in snapshot.children {
+                let snap = child as! DataSnapshot
+                let dict = snap.value as! [String: Any]
+                let otherUID = dict["UID"] as! String
+//                  let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
+                let otherMessageCount = dict["MessageCount"] as! Int
+                  // if matching phone number exists
+//                if phoneNum == self.otherUserPhoneNum {
+//                  matchingNum = true
+//                  self.segueToUserWL(userId: uid, fn: firstName, ln: lastName, userNum: phoneNum)
+//                }
+                print("!!!!!OTHER USER: \(otherUID), \(otherMessageCount)")
+              }
+//            if snapshot.exists() {
+//
+//            }
+//            else {
+//                // no active speakers or no unoccupied chatrooms
+//            }
+        }
+//        let ref = defaultDB.reference.child("usernames")
+//        ref.queryOrdered(byChild: "username").queryEqual(toValue: "sean").observeSingleEvent(of: DataEventType.value) { (snapshot) in
+//            if snapshot.exists() {
+//                print("exists")
+//            }
+//            else {
+//                print("doesn't exist")
+//            }
+//        }
+    }
+    
+    func configSpeaker() {
+        // initiate "first" chat message
+        currUser.messageCount += 1
+        if let user = user?.uid {
+            let chat = self.rootRef.child("chat").childByAutoId()
+//            chat.childByAutoId()
+            chat.updateChildValues(["UID" : user])
+            chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
+//            chat.updateChildValues(["ListenerMode" : listenerMode])
+//            chat.updateChildValues(["UserActive" : currStatus])
+            // no text first message?
+//            chat.updateChildValues(["Text" : ])
+            chat.updateChildValues(["MessageCount" : currUser.messageCount])
+//            chat.updateChildValues(["Occupied" : false])
+        }
+    }
+    
     func enableActivityMonitor() {
         let notificationCenter = NotificationCenter.default
-//        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
     }
     
     @objc func appMovedToBackground() {
         print("App moved to background!")
-        setUserStatus(status: false)
+        // SEND BLANK MESSAGE FOR DISABLING CHAT... ACTIVE = FALSE
+//        configSpeaker(disable: true)
+        currStatus = "0"
+        LM_UA_OCC = listenerMode + currStatus + chatOccupied
+        configSpeaker()
+        
+
         // segue to homeVC (tab bar)
         dismiss(animated: true, completion: nil)
     }
     
-    func setUserStatus(status: Bool) {
-        if let uid = user?.uid {
-            let users = self.rootRef.child("users")
-            users.child(uid).updateChildValues(["userActive" : status])
-        }
-    }
+//    func setUserStatus(status: Bool) {
+//        if let uid = user?.uid {
+//            let users = self.rootRef.child("users")
+//            users.child(uid).updateChildValues(["userActive" : currStatus])
+//        }
+//    }
 
 }
 

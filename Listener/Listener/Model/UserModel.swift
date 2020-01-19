@@ -11,17 +11,20 @@ import Foundation
 class User {
     var uid: String
     var moodRating: Double
-    var listenerMode: Bool
+    var listenerMode: String
+//    var activeStatus: String
+    var messageCount: Int
 
     init() {
         self.uid = ""
         self.moodRating = 0.0
-        self.listenerMode = false
+        self.listenerMode = "0"
+        self.messageCount = 0
     }
 
-    init(uid: String, moodRating: Double, listenerMode: Bool ) {
-        self.uid = uid
-        self.moodRating = moodRating
-        self.listenerMode = listenerMode
-    }
+//    init(uid: String, moodRating: Double, listenerMode: Bool ) {
+//        self.uid = uid
+//        self.moodRating = moodRating
+//        self.listenerMode = listenerMode
+//    }
 }
