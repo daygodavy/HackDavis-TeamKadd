@@ -165,6 +165,8 @@ class ChatViewController: UIViewController {
     
     func configListener(messageCount: Int) {
         currUser.messageCount = messageCount + 1
+        chatOccupied = "1"
+        LM_UA_OCC = listenerMode + currStatus + chatOccupied
 //        if let user = user?.uid {
         let chat = self.rootRef.child("chat").childByAutoId()
         
@@ -179,8 +181,7 @@ class ChatViewController: UIViewController {
     func configSpeaker() {
         // initiate "first" chat message
         currUser.messageCount += 1
-        chatOccupied = "1"
-        LM_UA_OCC = listenerMode + currStatus + chatOccupied
+//        LM_UA_OCC = listenerMode + currStatus + chatOccupied
         if let user = user?.uid {
             self.speakerUID = user
             let chat = self.rootRef.child("chat").childByAutoId()
@@ -203,7 +204,7 @@ class ChatViewController: UIViewController {
                     let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
                     let otherMessageCount = dict["MessageCount"] as! Int
                     let otherMessage = dict["Text"] as! String
-                    
+                    print("otherMessage!!!!!!!: \(otherMessage)")
 
 //                    // match found
 //                    if otherLM_UA_OCC == "010" {
