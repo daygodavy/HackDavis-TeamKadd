@@ -11,12 +11,13 @@ import Firebase
 
 class MoodRatingViewController: UIViewController {
     
+    // Idx 0-4 corresponds to ratings 1-5
     @IBOutlet var moodRatings: [UIButton]!
     var currUser: User = User()
     // Firebase
     let rootRef = Database.database().reference(fromURL: "https://teamkaddhackdavis2020.firebaseio.com/")
     var isAnonymous: Bool = true
-    var userId: String = ""
+//    var userId: String = ""
     var user = Auth.auth().currentUser
 
     override func viewDidLoad() {
@@ -24,6 +25,9 @@ class MoodRatingViewController: UIViewController {
         print("HEREEEEE \(user?.uid)")
         if (user?.uid == nil) {
             checkExistingUser()
+        }
+        else {
+            currUser.uid = user!.uid
         }
     
         // Do any additional setup after loading the view.
@@ -40,7 +44,8 @@ class MoodRatingViewController: UIViewController {
                 self.isAnonymous = user.isAnonymous  // true
                 let uid = user.uid
                 print("ASSIGN UID: \(uid)")
-                self.userId = uid
+                self.currUser.uid = uid
+//                self.userId = uid
             }
         }
     }
@@ -75,6 +80,7 @@ class MoodRatingViewController: UIViewController {
             let users = self.rootRef.child("users")
             users.child(uid).child("MoodRating").updateChildValues([now : moodRating])
         }
+        // SEGUE HERE
     }
     
 
