@@ -73,10 +73,12 @@ class ChatViewController: UIViewController {
         tableView.reloadData()
         messageTF.text = ""
         storeMessage(message: text)
-        generateMessage()
+//        generateMessage()
     }
     
     // MARK: - Private Functions
+    
+    
     func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -95,8 +97,9 @@ class ChatViewController: UIViewController {
         }
     }
     
-    func generateMessage() {
-        let message = Message(body: "Hello, Daniel. How is it going? You look very nice this evening.", wasSent: false)
+    func generateMessage(text: String) {
+//        let message = Message(body: "Hello, Daniel. How is it going? You look very nice this evening.", wasSent: false)
+        let message = Message(body: text, wasSent: false)
        // let message = "Target Acquirred"
         conversation.insert(message, at: 0)
         tableView.reloadData()
@@ -192,7 +195,7 @@ class ChatViewController: UIViewController {
         chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
         print("HERE2")
         // no text first message?
-//            chat.updateChildValues(["Text" : ])
+            chat.updateChildValues(["Text" : ""])
         chat.updateChildValues(["MessageCount" : currUser.messageCount])
         print("HERE3")
 //        }
@@ -210,22 +213,36 @@ class ChatViewController: UIViewController {
             chat.updateChildValues(["UID" : speakerUID])
             chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
             // no text first message?
-//            chat.updateChildValues(["Text" : ])
+            chat.updateChildValues(["Text" : ""])
             chat.updateChildValues(["MessageCount" : currUser.messageCount])
+            self.readMessage()
         }
     }
     
     func readMessage() {
+
         let chat = self.rootRef.child("chat")
-//        chat.observe(DataEventType.childAdded) { (snapshot) in
-//            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
-//
-//        }
-        
+
         print("speakerUID: \(speakerUID)")
         chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(DataEventType.childAdded) { (snapshot) in
-            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
+            let snap = snapshot as! DataSnapshot
+            let dict = snap.value as! [String: Any]
+            var otherUID = dict["LM_UA_OCC"] as! String
+            let newMessage = dict["Text"] as! String
+            var userType = otherUID.removeFirst()
+            if String(userType) != self.listenerMode {
+                self.generateMessage(text: newMessage)
+            }
+            
         }
+
+//        let chat = self.rootRef.child("chat")
+//
+//        print("speakerUID: \(speakerUID)")
+//        chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(DataEventType.childAdded) { (snapshot) in
+//            let snap = snapshot as! DataSnapshot
+//            snap
+//        }
         
 //        chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observeSingleEvent(of: <#T##DataEventType#>, with: <#T##(DataSnapshot) -> Void#>) { (snapshot) in
 //            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
