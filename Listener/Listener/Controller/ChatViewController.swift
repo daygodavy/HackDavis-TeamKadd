@@ -202,28 +202,43 @@ class ChatViewController: UIViewController {
     }
     
     func readMessage() {
-        rootRef.child("chat").queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(.value, with:{ (snapshot: DataSnapshot) in
+        let chat = self.rootRef.child("chat")
+        chat.observe(DataEventType.value) { (snapshot) in
             print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
-                for child in snapshot.children {
-                    let snap = child as! DataSnapshot
-                    let dict = snap.value as! [String: Any]
-//                    let otherUID = dict["UID"] as! String
-                    let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
-                    let otherMessageCount = dict["MessageCount"] as! Int
-                    let otherMessage = dict["Text"] as! String
-                    print("otherMessage!!!!!!!: \(otherMessage)")
-
-//                    // match found
-//                    if otherLM_UA_OCC == "010" {
-//                    //                    self.configChat()
-//                        self.speakerUID = otherUID
-//                        self.configListener(messageCount: otherMessageCount)
-//                    }
+            
+        }
+//        chat.queryOrdered(byChild: "LM_UA_OCC").queryEqual(toValue: "010").observeSingleEvent(of: DataEventType.value) { (snapshot) in
+        
+        
+//        rootRef.child("chat").observe(.value, with: {(snapshot: DataSnapshot) in
 //
-//                    // HANDLE NO MATCH!!!!!!!!
-//                    print("!!!!!OTHER USER: \(otherUID), \(otherMessageCount)")
-                }
-        })
+//        })
+        
+        
+//        rootRef.child("chat").queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(.value, with:{ (snapshot: DataSnapshot) in
+//            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
+//                for child in snapshot.children {
+//                    let snap = child as! DataSnapshot
+//                    let dict = snap.value as! [String: Any]
+////                    let otherUID = dict["UID"] as! String
+//                    let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
+//                    let otherMessageCount = dict["MessageCount"] as! Int
+//                    let otherMessage = dict["Text"] as! String
+//                    print("otherMessage!!!!!!!: \(otherMessage)")
+//
+////                    // match found
+////                    if otherLM_UA_OCC == "010" {
+////                    //                    self.configChat()
+////                        self.speakerUID = otherUID
+////                        self.configListener(messageCount: otherMessageCount)
+////                    }
+////
+////                    // HANDLE NO MATCH!!!!!!!!
+////                    print("!!!!!OTHER USER: \(otherUID), \(otherMessageCount)")
+//                }
+//        })
+        
+        
     }
     
     func enableActivityMonitor() {
