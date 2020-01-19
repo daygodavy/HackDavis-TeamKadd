@@ -10,6 +10,7 @@ target 'Listener' do
   pod 'Firebase/Storage'
   pod 'Firebase/Database'
   pod 'Firebase/Auth'
+  pod 'NVActivityIndicatorView'
 
   # Pods for Listener
 
