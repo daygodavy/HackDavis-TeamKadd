@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import CoreData
 
 class MoodRatingViewController: UIViewController {
     
@@ -19,9 +20,26 @@ class MoodRatingViewController: UIViewController {
     var isAnonymous: Bool = true
 //    var userId: String = ""
     var user = Auth.auth().currentUser
+    var result : [NSFetchRequestResult] = []
+    var moodList : NSManagedObjectContext!
+    var dataExist = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        moodList = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Mood")
+
+        request.returnsObjectsAsFaults = false
+        do {
+            result = try moodList.fetch(request)
+            
+            dataExist = true
+            print("Data feteched")
+        } catch {
+            print("Failed to fetch data")
+        }
+        
         print("HEREEEEE \(user?.uid)")
         if (user?.uid == nil) {
             checkExistingUser()
@@ -68,11 +86,23 @@ class MoodRatingViewController: UIViewController {
             break
         }
         storeMoodRating(moodRating: currUser.moodRating)
+        if (dataExist) {
+            let entity = NSEntityDescription.entity(forEntityName: "Mood", in: moodList)
+            let newMood = NSManagedObject(entity: entity!, insertInto: moodList)
+            newMood.setValue(currUser.moodRating, forKey: "mood")
+            newMood.setValue(NSDate(), forKey: "date")
+            do {
+                try moodList.save()
+                print("success?")
+            } catch {
+                print("failed saving")
+            }
+        }
     }
     
     func storeMoodRating(moodRating: Double) {
-        print("uid: \(user?.uid)")
-        print("date: \(Date())")
+        //print("uid: \(user?.uid)")
+        //print("date: \(Date())")
         let df = DateFormatter()
         df.dateFormat = "yyyy-MM-dd hh:mm:ss"
         let now = df.string(from: Date())
