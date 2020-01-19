@@ -1,2 +1,13 @@
-# HackDavis-TeamKadd
-HackDavis 2020
+## Synopsis
+Never Alone is a croud-sourced approach towards improving mental health by providing an alternate avenue to find someone to talk about what’s on their mind, all behind anonymity’s equalizing veil. 
+
+## Inspiration
+Mental health is one of _the_ defining issues of the information age. The rise of social networking has proven to be both a blessing and a curse as, on one hand, it has never been easier to keep in touch with those we care about, but on the other has become an endless, addictive stream of toxicity and vitriol that is streamed directly to us. A trend that we as a group have noticed among our peers is that we are more inclined to turn towards the omnipotent Google search bar for our issues, often left with a distorted view of our issues without real, human input. By letting users connect anonymously through a chat service based on their current mood, we are attempting to lower the barrier of entry to getting emotional support from other, living and breathing people. We are never alone.
+
+## Usage
+When a user launches Never Alone, they are presented with a choice between two session specific roles: “listener” and “speaker”. A “listener” is a user who chooses to be a rock for another user to talk to. Their primary purpose is to simply be present for someone in need, not solve their problems. They are there to empathize, relate, and provide support to someone who may otherwise have nowhere else to turn. A “speaker” is a user who is looking for someone to talk to. They are fully anonymous to the “listener” they are paired with and are encouraged to discuss issues that they might not  otherwise feel comfortable discussing publicly.
+If the user chooses to become a “speaker” they will be prompted with a brief two-stage survey to help a perspective “listener” know how they are feeling at the start of their chat session. The survey asks them to choose a current mood (Great, Good, Fair, Down, Rough) followed by a dominant emotion from our list of quick-select options (Stressed, Anxious, Angry, etc.) or define their own. Once a user has made their choices they are told how many users have felt the way recently, allowing them a glimpse into the reality of a widespread mental health epidemic. After this process, users are paired and their chat session begins. Once the chat session concludes, the speaker is able to fill out a feedback form for the listener, feedback that is known only by the external database and will be used to influence future matchmaking for that listener.
+
+## Technology
+In its most fundamental state, Never Alone is an anonymous chat client built through Google’s Firebase service for iOS using Swift 4. The majority of issues with the development stemmed from building a reliable chat client and allowing users to communicate via the app. 
+
