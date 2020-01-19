@@ -130,6 +130,8 @@ class ChatViewController: UIViewController {
             // configure speaker
             configSpeaker()
         }
+        readMessage()
+        print("JUST READ MESSAGE")
     }
     
     func findActiveSpeaker() {
@@ -203,12 +205,18 @@ class ChatViewController: UIViewController {
     
     func readMessage() {
         let chat = self.rootRef.child("chat")
-        chat.observe(DataEventType.childAdded) { (snapshot) in
-            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
-            
-        }
+//        chat.observe(DataEventType.childAdded) { (snapshot) in
+//            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
+//
+//        }
 
-//        chat.queryOrdered(byChild: "LM_UA_OCC").queryEqual(toValue: "010").observeSingleEvent(of: DataEventType.value) { (snapshot) in
+        chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(DataEventType.childAdded) { (snapshot) in
+            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
+        }
+        
+//        chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observeSingleEvent(of: <#T##DataEventType#>, with: <#T##(DataSnapshot) -> Void#>) { (snapshot) in
+//            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
+//        }
         
         
 //        rootRef.child("chat").observe(.value, with: {(snapshot: DataSnapshot) in
