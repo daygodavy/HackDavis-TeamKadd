@@ -28,13 +28,15 @@ class MoodRatingViewController: UIViewController {
         super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         moodList = appDelegate.persistentContainer.viewContext
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Mood")
+        let request = NSFetchRequest<NSFetchRequestResult> (entityName: "Mood")
 
         request.returnsObjectsAsFaults = false
         do {
             result = try moodList.fetch(request)
-            
             dataExist = true
+            let dataSort = NSSortDescriptor(key: "date", ascending: true)
+            result = (result as NSArray).sortedArray(using: [dataSort]) as! [NSFetchRequestResult]
+            
             print("Data feteched")
         } catch {
             print("Failed to fetch data")
