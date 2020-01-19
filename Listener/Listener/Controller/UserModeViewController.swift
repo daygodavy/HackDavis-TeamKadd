@@ -61,6 +61,7 @@ class UserModeViewController: UIViewController {
 
         let chatVC = nextView as! ChatViewController
         chatVC.listenerMode = mode
+        print("SEEEEEEEEEENDDDDD")
         chatVC.modalPresentationStyle = .fullScreen
         self.present(chatVC, animated: true, completion: nil)
     }

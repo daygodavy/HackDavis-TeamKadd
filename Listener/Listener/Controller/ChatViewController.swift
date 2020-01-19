@@ -216,7 +216,9 @@ class ChatViewController: UIViewController {
             // no text first message?
             chat.updateChildValues(["Text" : " "])
             chat.updateChildValues(["MessageCount" : currUser.messageCount])
+            print("CURRUSERMESSAGECOUNT: \(currUser.messageCount)")
             self.readMessage()
+            print("YUUUUUUUUUUUUP")
         }
     }
     
@@ -233,8 +235,20 @@ class ChatViewController: UIViewController {
             var otherUID = dict["LM_UA_OCC"] as! String
             let newMessage = dict["Text"] as! String
             var userType = otherUID.removeFirst()
+            // handle chatOccupied for speaker after connecting listener
+            // handle signal disconnect if recognized
+            print("CHECK SPECS: \(String(userType)) &&&& \(self.listenerMode)")
             if String(userType) != self.listenerMode {
-                self.generateMessage(text: newMessage)
+                if self.chatOccupied == "0" && self.listenerMode == "0" && newCount > 1 {
+                    self.chatOccupied = "1"
+                    self.generateMessage(text: newMessage)
+                }
+                else if newCount < 0 {
+                    self.selfDisconnect()
+                }
+                else {
+                    self.generateMessage(text: newMessage)
+                }
             }
             
         }
@@ -251,10 +265,17 @@ class ChatViewController: UIViewController {
         // SEND BLANK MESSAGE FOR DISABLING CHAT... ACTIVE = FALSE
 //        configSpeaker(disable: true)
         currStatus = "0"
+        chatOccupied = "0"
         LM_UA_OCC = listenerMode + currStatus + chatOccupied
-        configSpeaker()
+        
+        
+//        configSpeaker()
+        
+        
+        print("CHECK HERERERERERE \(LM_UA_OCC)")
         clearChatHistory()
         // RIGHT HERE: SEND LAST MESSAGE TO OTHER USER TO INDICATE DISCONNECT
+        signalDisconnect()
         currUser.messageCount = 0
         // segue to homeVC (tab bar)
         dismiss(animated: true, completion: nil)
@@ -270,24 +291,40 @@ class ChatViewController: UIViewController {
             for child in snapshot.children {
                 let snap = child as! DataSnapshot
                 snap.ref.parent?.removeValue()
-                let dict = snap.value as! [String: Any]
-                let otherUID = dict["UID"] as! String
-                let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
-                let otherMessageCount = dict["MessageCount"] as! Int
-                
-                // match found
-                if otherLM_UA_OCC == "010" {
-        //                    self.configChat()
-                    self.speakerUID = otherUID
-                    // DEST2
-                    self.configListener(messageCount: otherMessageCount)
-                }
+//                let dict = snap.value as! [String: Any]
+//                let otherUID = dict["UID"] as! String
+//                let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
+//                let otherMessageCount = dict["MessageCount"] as! Int
+//
+//                // match found
+//                if otherLM_UA_OCC == "010" {
+//        //                    self.configChat()
+//                    self.speakerUID = otherUID
+//                    // DEST2
+//                    self.configListener(messageCount: otherMessageCount)
+//                }
                 
                 // HANDLE NO MATCH!!!!!!!!
                 // set boolean or lock keyboard so that listener cannot send message if not occupied
 
               }
         }
+    }
+    
+    func signalDisconnect() {
+        let chat = self.rootRef.child("chat").childByAutoId()
+        chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
+        chat.updateChildValues(["Text" : " "])
+        chat.updateChildValues(["MessageCount" : -1])
+        chat.updateChildValues(["UID": self.speakerUID])
+    }
+    
+    func selfDisconnect() {
+        currStatus = "0"
+        chatOccupied = "0"
+        LM_UA_OCC = listenerMode + currStatus + chatOccupied
+        clearChatHistory()
+        currUser.messageCount = 0
     }
     
 
