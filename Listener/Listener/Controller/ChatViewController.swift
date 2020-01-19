@@ -31,6 +31,8 @@ class ChatViewController: UIViewController {
     var chatOccupied: String = "0"
     var LM_UA_OCC: String = "000"
     var speakerUID: String = ""
+    var postRefHandle: DatabaseHandle!
+    var postsRef: DatabaseReference!
     
     var sentMessages = [Message]()
     var receivedMessages = [Message]()
@@ -85,11 +87,11 @@ class ChatViewController: UIViewController {
             // end chat
             self.currStatus = "0"
             self.LM_UA_OCC = self.listenerMode + self.currStatus + self.chatOccupied
-            self.configSpeaker()
+//            self.configSpeaker()
             self.clearChatHistory()
             // RIGHT HERE: SEND LAST MESSAGE TO OTHER USER TO INDICATE DISCONNECT
             self.currUser.messageCount = 0
-            
+            self.postsRef.removeObserver(withHandle: self.postRefHandle!)
             // segue to rating if speaker
             if (self.listenerMode == "1") {
                 let storyboard  = UIStoryboard(name: "Main", bundle: nil)
@@ -188,17 +190,10 @@ class ChatViewController: UIViewController {
         currUser.messageCount += 1
             if let user = user?.uid {
                 let chat = self.rootRef.child("chat").childByAutoId()
-    //            chat.childByAutoId()
                 LM_UA_OCC = listenerMode + currStatus + chatOccupied
-                print("STORE1")
-                //***** CHANGE OCCUPIED WHEN CONNECTED
                 chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
-                print("STORE2")
-                // no text first message?
                 chat.updateChildValues(["Text" : message])
-                print("STORE3")
                 chat.updateChildValues(["MessageCount" : currUser.messageCount])
-                print("STORE4")
                 chat.updateChildValues(["UID" : speakerUID])
             }
     }
@@ -210,7 +205,6 @@ class ChatViewController: UIViewController {
             // configure listener
             findActiveSpeaker()
             
-//            configListener()
         }
         else {
             // configure speaker
@@ -219,6 +213,7 @@ class ChatViewController: UIViewController {
 //        readMessage()
 //        print("JUST READ MESSAGE")
         // DEST1
+        self.readMessage()
     }
     
     func findActiveSpeaker() {
@@ -239,11 +234,9 @@ class ChatViewController: UIViewController {
                 if otherLM_UA_OCC == "010" {
 //                    self.configChat()
                     self.speakerUID = otherUID
-                    print("AAAAAA \(self.speakerUID)")
                     // DEST2
                     self.configListener(messageCount: otherMessageCount)
-                    self.readMessage()
-                    print("JUST READ MESSAGE")
+                    //self.readMessage()
                     break
                 }
                 
@@ -295,7 +288,7 @@ class ChatViewController: UIViewController {
             // no text first message?
             chat.updateChildValues(["Text" : " "])
             chat.updateChildValues(["MessageCount" : currUser.messageCount])
-            self.readMessage()
+//            self.readMessage()
         }
     }
     
@@ -304,13 +297,14 @@ class ChatViewController: UIViewController {
         let chat = self.rootRef.child("chat")
 
         print("speakerUID: \(speakerUID)")
-        chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(DataEventType.childAdded) { (snapshot) in
+        self.postsRef = chat
+        self.postRefHandle = postsRef.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(DataEventType.childAdded) { (snapshot) in
             let snap = snapshot as! DataSnapshot
             let dict = snap.value as! [String: Any]
             print(dict)
-            let newCount = dict["MessageCount"] as! Int
-            var otherUID = dict["LM_UA_OCC"] as! String
+//            let newCount = dict["MessageCount"] as! Int
             let newMessage = dict["Text"] as! String
+            var otherUID = dict["LM_UA_OCC"] as! String
             var userType = otherUID.removeFirst()
             if String(userType) != self.listenerMode {
                 self.generateMessage(text: newMessage)
@@ -331,11 +325,12 @@ class ChatViewController: UIViewController {
 //        configSpeaker(disable: true)
         currStatus = "0"
         LM_UA_OCC = listenerMode + currStatus + chatOccupied
-        configSpeaker()
+//        configSpeaker()
         clearChatHistory()
         // RIGHT HERE: SEND LAST MESSAGE TO OTHER USER TO INDICATE DISCONNECT
         currUser.messageCount = 0
         // segue to homeVC (tab bar)
+        self.postsRef.removeObserver(withHandle: self.postRefHandle!)
         dismiss(animated: true, completion: nil)
     }
     
@@ -349,18 +344,18 @@ class ChatViewController: UIViewController {
             for child in snapshot.children {
                 let snap = child as! DataSnapshot
                 snap.ref.parent?.removeValue()
-                let dict = snap.value as! [String: Any]
-                let otherUID = dict["UID"] as! String
-                let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
-                let otherMessageCount = dict["MessageCount"] as! Int
-                
-                // match found
-                if otherLM_UA_OCC == "010" {
-        //                    self.configChat()
-                    self.speakerUID = otherUID
-                    // DEST2
-                    self.configListener(messageCount: otherMessageCount)
-                }
+//                let dict = snap.value as! [String: Any]
+//                let otherUID = dict["UID"] as! String
+//                let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
+//                let otherMessageCount = dict["MessageCount"] as! Int
+//
+//                // match found
+//                if otherLM_UA_OCC == "010" {
+//        //                    self.configChat()
+//                    self.speakerUID = otherUID
+//                    // DEST2
+//                    self.configListener(messageCount: otherMessageCount)
+//                }
                 
                 // HANDLE NO MATCH!!!!!!!!
                 // set boolean or lock keyboard so that listener cannot send message if not occupied
