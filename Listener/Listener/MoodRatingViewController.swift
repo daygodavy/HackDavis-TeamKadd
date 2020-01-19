@@ -7,26 +7,43 @@
 //
 
 import UIKit
+import Firebase
 
 class MoodRatingViewController: UIViewController {
     
     @IBOutlet var moodRatings: [UIButton]!
     var currUser: User = User()
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(<#Bool#>)
-//        moodRatings.forEach {
-//            $0.setImage(moodRatingsOFF, for: .normal)
-//            $0.setImage(BoxON, for: .selected)
-//        }
-//    }
+    // Firebase
+    let rootRef = Database.database().reference(fromURL: "https://teamkaddhackdavis2020.firebaseio.com/")
+    var isAnonymous: Bool = true
+    var userId: String = ""
+    var user = Auth.auth().currentUser
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print("HEREEEEE \(user?.uid)")
+        if (user?.uid == nil) {
+            checkExistingUser()
+        }
+    
         // Do any additional setup after loading the view.
     }
     
+    func checkExistingUser() {
+        Auth.auth().signInAnonymously() { (authResult, error) in
+          // ...
+            if let err = error {
+                print("ERRRRRORRR \(err)")
+            }
+            else {
+                guard let user = authResult?.user else { return }
+                self.isAnonymous = user.isAnonymous  // true
+                let uid = user.uid
+                print("ASSIGN UID: \(uid)")
+                self.userId = uid
+            }
+        }
+    }
     
     @IBAction func moodRatingSelected(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
@@ -45,7 +62,21 @@ class MoodRatingViewController: UIViewController {
         default:
             break
         }
+        storeMoodRating(moodRating: currUser.moodRating)
     }
+    
+    func storeMoodRating(moodRating: Double) {
+        print("uid: \(user?.uid)")
+        print("date: \(Date())")
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd hh:mm:ss"
+        let now = df.string(from: Date())
+        if let uid = user?.uid {
+            let users = self.rootRef.child("users")
+            users.child(uid).child("MoodRating").updateChildValues([now : moodRating])
+        }
+    }
+    
 
     /*
     // MARK: - Navigation
