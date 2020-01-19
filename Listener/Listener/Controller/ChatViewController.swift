@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class ChatViewController: UIViewController {
     
@@ -19,6 +20,10 @@ class ChatViewController: UIViewController {
     @IBOutlet weak var messageView: UIView!
     @IBOutlet weak var leadingMessageConstraint: NSLayoutConstraint!
     @IBOutlet weak var trailingMessageConstraint: NSLayoutConstraint!
+    
+    // Firebase
+    let rootRef = Database.database().reference(fromURL: "https://teamkaddhackdavis2020.firebaseio.com/")
+    var user = Auth.auth().currentUser
     
     
     
@@ -38,7 +43,10 @@ class ChatViewController: UIViewController {
         self.tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
         messageView.layer.cornerRadius = 15.0
         addObservers()
+        enableActivityMonitor()
+        setUserStatus(status: true)
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         messageTF.becomeFirstResponder()
 
@@ -83,6 +91,26 @@ class ChatViewController: UIViewController {
        // let message = "Target Acquirred"
         conversation.insert(message, at: 0)
         tableView.reloadData()
+    }
+    
+    func enableActivityMonitor() {
+        let notificationCenter = NotificationCenter.default
+//        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
+    }
+    
+    @objc func appMovedToBackground() {
+        print("App moved to background!")
+        setUserStatus(status: false)
+        // segue to homeVC (tab bar)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func setUserStatus(status: Bool) {
+        if let uid = user?.uid {
+            let users = self.rootRef.child("users")
+            users.child(uid).updateChildValues(["userActive" : status])
+        }
     }
 
 }

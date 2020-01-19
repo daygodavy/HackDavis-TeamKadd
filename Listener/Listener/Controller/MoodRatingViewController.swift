@@ -81,6 +81,14 @@ class MoodRatingViewController: UIViewController {
             users.child(uid).child("MoodRating").updateChildValues([now : moodRating])
         }
         // SEGUE HERE
+        navigateToHomeVC()
+    }
+    
+    func navigateToHomeVC() {
+        let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController") as? UITabBarController
+
+        self.view.window?.rootViewController = homeViewController
+        self.view.window?.makeKeyAndVisible()
     }
     
 

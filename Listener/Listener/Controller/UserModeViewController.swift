@@ -16,7 +16,6 @@ class UserModeViewController: UIViewController {
     var currUser: User = User()
     // Firebase
     let rootRef = Database.database().reference(fromURL: "https://teamkaddhackdavis2020.firebaseio.com/")
-//    var userId: String = ""
     var user = Auth.auth().currentUser
     
     override func viewDidLoad() {
@@ -45,8 +44,31 @@ class UserModeViewController: UIViewController {
             let users = self.rootRef.child("users")
             users.child(uid).updateChildValues(["ListenerMode" : userMode])
         }
-        // SEGUE HERE
+        if !userMode {
+            // put speaker into chatroom
+            navigateToUserModeVC()
+        }
+        else {
+            // connect the listeners to a speaker chatroom
+        }
     }
+    
+    func navigateToUserModeVC() {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        let nextView = storyboard?.instantiateViewController(identifier: "ChatViewController")
+
+        let chatVC = nextView as! ChatViewController
+        chatVC.modalPresentationStyle = .fullScreen
+        self.present(chatVC, animated: true, completion: nil)
+        
+        
+//        let homeViewController = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController") as? UITabBarController
+//
+//        self.view.window?.rootViewController = homeViewController
+//        self.view.window?.makeKeyAndVisible()
+    }
+    
+    
     
     /*
     // MARK: - Navigation
