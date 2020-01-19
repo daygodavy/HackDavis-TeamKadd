@@ -109,11 +109,15 @@ class ChatViewController: UIViewController {
     //            chat.childByAutoId()
                 LM_UA_OCC = listenerMode + currStatus + chatOccupied
                 chat.updateChildValues(["UID" : speakerUID])
+                print("STORE1")
                 //***** CHANGE OCCUPIED WHEN CONNECTED
                 chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
+                print("STORE2")
                 // no text first message?
                 chat.updateChildValues(["Text" : message])
+                print("STORE3")
                 chat.updateChildValues(["MessageCount" : currUser.messageCount])
+                print("STORE4")
             }
     }
     
@@ -179,10 +183,13 @@ class ChatViewController: UIViewController {
         let chat = self.rootRef.child("chat").childByAutoId()
         
         chat.updateChildValues(["UID" : self.speakerUID])
+        print("HERE1")
         chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
+        print("HERE2")
         // no text first message?
 //            chat.updateChildValues(["Text" : ])
         chat.updateChildValues(["MessageCount" : currUser.messageCount])
+        print("HERE3")
 //        }
     }
     
