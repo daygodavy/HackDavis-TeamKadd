@@ -32,6 +32,7 @@
 		66EF008923D4AFE40058FED4 /* UserRatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EF008823D4AFE40058FED4 /* UserRatingViewController.swift */; };
 		66EF008B23D4B4D00058FED4 /* DidConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EF008A23D4B4D00058FED4 /* DidConnectViewController.swift */; };
 		66EF008E23D4DDCB0058FED4 /* Listener.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 66EF008C23D4DDCB0058FED4 /* Listener.xcdatamodeld */; };
+		66EF009023D4ED160058FED4 /* SymptomsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EF008F23D4ED160058FED4 /* SymptomsViewController.swift */; };
 		FCB40623EC52870C96322153 /* Pods_Listener.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D549376CA66EB89331DA236 /* Pods_Listener.framework */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +86,7 @@
 		66EF008823D4AFE40058FED4 /* UserRatingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRatingViewController.swift; sourceTree = "<group>"; };
 		66EF008A23D4B4D00058FED4 /* DidConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DidConnectViewController.swift; path = Controller/DidConnectViewController.swift; sourceTree = "<group>"; };
 		66EF008D23D4DDCB0058FED4 /* Listener.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Listener.xcdatamodel; sourceTree = "<group>"; };
+		66EF008F23D4ED160058FED4 /* SymptomsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymptomsViewController.swift; sourceTree = "<group>"; };
 		69CEB31DDC3250E0F94F1B25 /* Pods-ListenerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ListenerTests.release.xcconfig"; path = "Target Support Files/Pods-ListenerTests/Pods-ListenerTests.release.xcconfig"; sourceTree = "<group>"; };
 		AE5911D816F890CF74C235C4 /* Pods-Listener-ListenerUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Listener-ListenerUITests.debug.xcconfig"; path = "Target Support Files/Pods-Listener-ListenerUITests/Pods-Listener-ListenerUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		E7B96EF26647895C8F7A01AB /* Pods_Listener_ListenerUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Listener_ListenerUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -203,6 +205,7 @@
 				66EF008623D4394A0058FED4 /* LBufferViewController.swift */,
 				66EF008823D4AFE40058FED4 /* UserRatingViewController.swift */,
 				66EF007C23D3D2E40058FED4 /* ChatViewController.swift */,
+				66EF008F23D4ED160058FED4 /* SymptomsViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -476,6 +479,7 @@
 				66EF008323D40AF30058FED4 /* MessageManager.swift in Sources */,
 				5B9E4C5023D425700069BB68 /* HomeViewController.swift in Sources */,
 				66EF008123D3EF360058FED4 /* MessageTableViewCell.swift in Sources */,
+				66EF009023D4ED160058FED4 /* SymptomsViewController.swift in Sources */,
 				5B48936723D3D47D00B09345 /* UserModel.swift in Sources */,
 				66EF008523D4215F0058FED4 /* MoodPageViewController.swift in Sources */,
 				66EF008B23D4B4D00058FED4 /* DidConnectViewController.swift in Sources */,

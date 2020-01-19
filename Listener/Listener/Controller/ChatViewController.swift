@@ -48,6 +48,7 @@ class ChatViewController: UIViewController {
         self.tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
         messageView.layer.cornerRadius = 15.0
         addObservers()
+        generateStartUpMessages()
         enableActivityMonitor()
         configUserChat()
         // FOR SPEAKER: FIRST EMPTY MESSAGE WITH FLAGS
@@ -61,6 +62,22 @@ class ChatViewController: UIViewController {
     }
     
     // MARK: - Actions
+    @IBAction func didTapReport(_ sender: Any) {
+        let alertController = UIAlertController(title: "Report User", message: "Please specify reasoning below.", preferredStyle: .alert)
+        let confirmAction = UIAlertAction(title: "Submit", style: .default) { (_) in
+            if let txtField = alertController.textFields?.first, let text = txtField.text {
+                // do something bad to user
+                self.disconnect()
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (_) in }
+        alertController.addTextField { (textField) in
+            textField.placeholder = "Language, Abuse, Rude, etc."
+        }
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
     @IBAction func didTapDisconnect(_ sender: Any) {
         let alert = UIAlertController(title: "Disconnect from user?", message: "", preferredStyle: .alert)
 
@@ -102,6 +119,24 @@ class ChatViewController: UIViewController {
         storeMessage(message: text)
 //        generateMessage()
     }
+    func disconnect() {
+        self.currStatus = "0"
+        self.LM_UA_OCC = self.listenerMode + self.currStatus + self.chatOccupied
+        self.configSpeaker()
+        self.clearChatHistory()
+        // RIGHT HERE: SEND LAST MESSAGE TO OTHER USER TO INDICATE DISCONNECT
+        self.currUser.messageCount = 0
+        
+        // segue to rating if speaker
+        if (self.listenerMode == "1") {
+            let storyboard  = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(identifier: "UserRating") as UserRatingViewController
+            vc.modalPresentationStyle = .fullScreen
+            self.present(vc, animated: true, completion: nil)
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
     
     // MARK: - Private Functions
     
@@ -114,13 +149,13 @@ class ChatViewController: UIViewController {
     // observer functions
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            self.messageBottomConstraint.constant += keyboardSize.height
+            self.messageBottomConstraint.constant = keyboardSize.height
         }
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            self.messageBottomConstraint.constant -= keyboardSize.height
+            //self.messageBottomConstraint.constant -= keyboardSize.height
         }
     }
     
@@ -130,6 +165,23 @@ class ChatViewController: UIViewController {
        // let message = "Target Acquirred"
         conversation.insert(message, at: 0)
         tableView.reloadData()
+    }
+    
+    func generateStartUpMessages() {
+        // listener
+        if (self.listenerMode == "1") {
+            var body = "You're now listening. You're not here to solve problems. All you need is your presence and perspective.\n"
+            body += "- NeverAlone Team"
+            let message = Message(body: body, wasSent: false)
+            conversation.insert(message, at: 0)
+            tableView.reloadData()
+        } else {
+            var body = "You're connected. Feel free to say what's on your mind - you're never alone.\n"
+            body += "- NeverAlone Team"
+            let message = Message(body: body, wasSent: false)
+            conversation.insert(message, at: 0)
+            tableView.reloadData()
+        }
     }
     
     func storeMessage(message: String) {
@@ -336,11 +388,11 @@ extension ChatViewController: UITableViewDelegate, UITableViewDataSource {
         
         if (message.wasSent) {
             cell.formatSentMessage()
-            cell.bgView.backgroundColor = .blue
+            cell.bgView.backgroundColor = .systemBlue
             cell.textLabel?.textAlignment = .left
         } else {
             cell.formatRecievedMessage()
-            cell.bgView.backgroundColor = .red
+            cell.bgView.backgroundColor = .systemGray6
             cell.textLabel?.textAlignment = .right
             
         }
