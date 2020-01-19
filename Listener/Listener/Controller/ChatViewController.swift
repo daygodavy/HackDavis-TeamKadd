@@ -111,7 +111,6 @@ class ChatViewController: UIViewController {
                 let chat = self.rootRef.child("chat").childByAutoId()
     //            chat.childByAutoId()
                 LM_UA_OCC = listenerMode + currStatus + chatOccupied
-                chat.updateChildValues(["UID" : speakerUID])
                 print("STORE1")
                 //***** CHANGE OCCUPIED WHEN CONNECTED
                 chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
@@ -121,6 +120,7 @@ class ChatViewController: UIViewController {
                 print("STORE3")
                 chat.updateChildValues(["MessageCount" : currUser.messageCount])
                 print("STORE4")
+                chat.updateChildValues(["UID" : speakerUID])
             }
     }
     
@@ -190,14 +190,15 @@ class ChatViewController: UIViewController {
 //        if let user = user?.uid {
         let chat = self.rootRef.child("chat").childByAutoId()
         
-        chat.updateChildValues(["UID" : self.speakerUID])
+//        chat.updateChildValues(["UID" : self.speakerUID])
         print("HERE1")
         chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
         print("HERE2")
         // no text first message?
-            chat.updateChildValues(["Text" : ""])
+            chat.updateChildValues(["Text" : " "])
         chat.updateChildValues(["MessageCount" : currUser.messageCount])
         print("HERE3")
+        chat.updateChildValues(["UID" : self.speakerUID])
 //        }
     }
     
@@ -213,7 +214,7 @@ class ChatViewController: UIViewController {
             chat.updateChildValues(["UID" : speakerUID])
             chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
             // no text first message?
-            chat.updateChildValues(["Text" : ""])
+            chat.updateChildValues(["Text" : " "])
             chat.updateChildValues(["MessageCount" : currUser.messageCount])
             self.readMessage()
         }
@@ -227,6 +228,8 @@ class ChatViewController: UIViewController {
         chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(DataEventType.childAdded) { (snapshot) in
             let snap = snapshot as! DataSnapshot
             let dict = snap.value as! [String: Any]
+            print(dict)
+            let newCount = dict["MessageCount"] as! Int
             var otherUID = dict["LM_UA_OCC"] as! String
             let newMessage = dict["Text"] as! String
             var userType = otherUID.removeFirst()
@@ -235,48 +238,6 @@ class ChatViewController: UIViewController {
             }
             
         }
-
-//        let chat = self.rootRef.child("chat")
-//
-//        print("speakerUID: \(speakerUID)")
-//        chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(DataEventType.childAdded) { (snapshot) in
-//            let snap = snapshot as! DataSnapshot
-//            snap
-//        }
-        
-//        chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observeSingleEvent(of: <#T##DataEventType#>, with: <#T##(DataSnapshot) -> Void#>) { (snapshot) in
-//            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
-//        }
-        
-        
-//        rootRef.child("chat").observe(.value, with: {(snapshot: DataSnapshot) in
-//
-//        })
-        
-        
-//        rootRef.child("chat").queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(.value, with:{ (snapshot: DataSnapshot) in
-//            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
-//                for child in snapshot.children {
-//                    let snap = child as! DataSnapshot
-//                    let dict = snap.value as! [String: Any]
-////                    let otherUID = dict["UID"] as! String
-//                    let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
-//                    let otherMessageCount = dict["MessageCount"] as! Int
-//                    let otherMessage = dict["Text"] as! String
-//                    print("otherMessage!!!!!!!: \(otherMessage)")
-//
-////                    // match found
-////                    if otherLM_UA_OCC == "010" {
-////                    //                    self.configChat()
-////                        self.speakerUID = otherUID
-////                        self.configListener(messageCount: otherMessageCount)
-////                    }
-////
-////                    // HANDLE NO MATCH!!!!!!!!
-////                    print("!!!!!OTHER USER: \(otherUID), \(otherMessageCount)")
-//                }
-//        })
-        
         
     }
     
@@ -329,12 +290,6 @@ class ChatViewController: UIViewController {
         }
     }
     
-//    func setUserStatus(status: Bool) {
-//        if let uid = user?.uid {
-//            let users = self.rootRef.child("users")
-//            users.child(uid).updateChildValues(["userActive" : currStatus])
-//        }
-//    }
 
 }
 
