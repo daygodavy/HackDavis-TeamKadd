@@ -112,6 +112,19 @@ class MoodRatingViewController: UIViewController {
             let users = self.rootRef.child("users")
             users.child(uid).child("MoodRating").updateChildValues([now : moodRating])
         }
+
+        let global = self.rootRef.child("global")
+        global.queryOrdered(byChild: "mood").queryEqual(toValue: String(Int(moodRating))).observeSingleEvent(of:     DataEventType.value) { (snapshot) in
+            var total = 0
+                for child in snapshot.children {
+                    let snap = child as! DataSnapshot
+                    let dict = snap.value as! [String: Any]
+                    total += dict["count"] as? Int ?? 0
+                }
+            global.child(String(Int(moodRating))).updateChildValues(["count" : total+1])
+            print(total+1)
+        }
+
         // SEGUE HERE
         navigateToHomeVC()
     }
