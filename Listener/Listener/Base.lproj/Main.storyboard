@@ -11,7 +11,7 @@
         <!--Chat-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="UserModeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="UserModeViewController" customModule="Listener" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -25,9 +25,6 @@
                                             <constraint firstAttribute="height" constant="50" id="nY3-al-9Sm"/>
                                         </constraints>
                                         <state key="normal" title="Listener"/>
-                                        <connections>
-                                            <action selector="userModeSelected:" destination="BYZ-38-t0r" eventType="touchUpInside" id="A9L-QC-dQP"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dd5-fw-Qkk">
                                         <rect key="frame" x="0.0" y="58" width="56" height="50"/>
@@ -35,9 +32,6 @@
                                             <constraint firstAttribute="height" constant="50" id="UlI-Ph-Ysq"/>
                                         </constraints>
                                         <state key="normal" title="Speaker"/>
-                                        <connections>
-                                            <action selector="userModeSelected:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DKb-bo-hCk"/>
-                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -50,14 +44,10 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Chat" id="pVs-8E-alg"/>
-                    <connections>
-                        <outletCollection property="userMode" destination="i8v-Nl-ESA" collectionClass="NSMutableArray" id="9po-Td-dvK"/>
-                        <outletCollection property="userMode" destination="dd5-fw-Qkk" collectionClass="NSMutableArray" id="91W-cg-Jqu"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1580" y="66"/>
+            <point key="canvasLocation" x="90" y="-899"/>
         </scene>
         <!--Chat View Controller-->
         <scene sceneID="IBA-dC-BaK">
@@ -116,9 +106,12 @@
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uoa-lU-1wk">
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <items>
-                                    <navigationItem title="Title" id="iky-cJ-aD6">
-                                        <barButtonItem key="leftBarButtonItem" title="Item" id="l9a-5p-0ik"/>
-                                        <barButtonItem key="rightBarButtonItem" title="Item" id="dHZ-cB-UMY"/>
+                                    <navigationItem id="iky-cJ-aD6">
+                                        <barButtonItem key="rightBarButtonItem" title="Disconnect" id="dHZ-cB-UMY">
+                                            <connections>
+                                                <action selector="didTapDisconnect:" destination="A9M-h5-wpn" id="Gru-Xt-TLb"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -168,6 +161,7 @@
                         <viewLayoutGuide key="safeArea" id="tu9-hO-jPV"/>
                     </view>
                     <connections>
+                        <outlet property="disconnectButton" destination="dHZ-cB-UMY" id="6QL-RP-3ah"/>
                         <outlet property="messageBottomConstraint" destination="ZJZ-ah-jT7" id="MQg-id-X6j"/>
                         <outlet property="messageTF" destination="SBy-2Y-CPl" id="EdU-Xx-P1h"/>
                         <outlet property="messageView" destination="1KY-fj-5Hm" id="t9Z-WP-1xn"/>
@@ -177,7 +171,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PnC-XJ-g0f" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3149.275362318841" y="65.625"/>
+            <point key="canvasLocation" x="4577" y="66"/>
         </scene>
         <!--Mood-->
         <scene sceneID="bli-ZW-JGz">
@@ -198,7 +192,7 @@
         <!--Chat-->
         <scene sceneID="rLn-cP-8C4">
             <objects>
-                <viewController storyboardIdentifier="MoodRatingViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mWo-NN-otu" customClass="MoodRatingViewController" customModule="Listener" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController useStoryboardIdentifierAsRestorationIdentifier="YES" id="mWo-NN-otu" customClass="MoodRatingViewController" customModule="Listener" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="sEO-PV-uMs">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -213,9 +207,6 @@
                                             <constraint firstAttribute="width" constant="70" id="vfX-mo-9Ss"/>
                                         </constraints>
                                         <state key="normal" title="5"/>
-                                        <connections>
-                                            <action selector="moodRatingSelected:" destination="mWo-NN-otu" eventType="touchUpInside" id="pii-ZZ-R4O"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mzl-hW-Dgt">
                                         <rect key="frame" x="0.0" y="78" width="70" height="70"/>
@@ -224,9 +215,6 @@
                                             <constraint firstAttribute="width" constant="70" id="Fju-a4-ccg"/>
                                         </constraints>
                                         <state key="normal" title="4"/>
-                                        <connections>
-                                            <action selector="moodRatingSelected:" destination="mWo-NN-otu" eventType="touchUpInside" id="D2a-3s-qDM"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ujM-CD-Mbu">
                                         <rect key="frame" x="0.0" y="156" width="70" height="70"/>
@@ -235,9 +223,6 @@
                                             <constraint firstAttribute="width" constant="70" id="iIK-gn-83D"/>
                                         </constraints>
                                         <state key="normal" title="3"/>
-                                        <connections>
-                                            <action selector="moodRatingSelected:" destination="mWo-NN-otu" eventType="touchUpInside" id="oKI-Lo-s4W"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zqz-yk-apW">
                                         <rect key="frame" x="0.0" y="234" width="70" height="70"/>
@@ -246,9 +231,6 @@
                                             <constraint firstAttribute="height" constant="70" id="RxK-wY-UwG"/>
                                         </constraints>
                                         <state key="normal" title="2"/>
-                                        <connections>
-                                            <action selector="moodRatingSelected:" destination="mWo-NN-otu" eventType="touchUpInside" id="Y1N-pg-lGI"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ufl-eU-Zr8">
                                         <rect key="frame" x="0.0" y="312" width="70" height="70"/>
@@ -257,9 +239,6 @@
                                             <constraint firstAttribute="height" constant="70" id="U0l-OD-f8j"/>
                                         </constraints>
                                         <state key="normal" title="1"/>
-                                        <connections>
-                                            <action selector="moodRatingSelected:" destination="mWo-NN-otu" eventType="touchUpInside" id="2Up-XK-5rc"/>
-                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -272,22 +251,15 @@
                         <viewLayoutGuide key="safeArea" id="OrO-We-Ht1"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Chat" id="SjB-4r-7wJ"/>
-                    <connections>
-                        <outletCollection property="moodRatings" destination="ufl-eU-Zr8" collectionClass="NSMutableArray" id="BGW-vw-Ijp"/>
-                        <outletCollection property="moodRatings" destination="zqz-yk-apW" collectionClass="NSMutableArray" id="38d-vD-jpo"/>
-                        <outletCollection property="moodRatings" destination="ujM-CD-Mbu" collectionClass="NSMutableArray" id="IdS-2f-qT8"/>
-                        <outletCollection property="moodRatings" destination="Mzl-hW-Dgt" collectionClass="NSMutableArray" id="gga-VZ-nKd"/>
-                        <outletCollection property="moodRatings" destination="8MG-mS-2qM" collectionClass="NSMutableArray" id="uzh-tG-TDg"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qUR-97-Mow" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="671" y="-675"/>
+            <point key="canvasLocation" x="-762" y="-899"/>
         </scene>
-        <!--View Controller-->
+        <!--Item-->
         <scene sceneID="AZq-ue-9NQ">
             <objects>
-                <viewController id="g2R-yy-zag" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="UserModeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="g2R-yy-zag" customClass="UserModeViewController" customModule="Listener" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iCb-cy-fdh">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -306,6 +278,9 @@
                                 <state key="normal" title="Listen">
                                     <color key="titleColor" name="custom-white"/>
                                 </state>
+                                <connections>
+                                    <action selector="userModeSelected:" destination="g2R-yy-zag" eventType="touchUpInside" id="xn3-6Z-GbB"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7hW-Hn-tMg">
                                 <rect key="frame" x="87" y="469" width="240" height="39"/>
@@ -313,6 +288,9 @@
                                 <state key="normal" title="Share">
                                     <color key="titleColor" name="custom-white"/>
                                 </state>
+                                <connections>
+                                    <action selector="userModeSelected:" destination="g2R-yy-zag" eventType="touchUpInside" id="3CL-J0-Po4"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Home" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EbK-0R-PHg">
                                 <rect key="frame" x="20" y="78" width="374" height="21"/>
@@ -339,15 +317,20 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="0VC-Nm-B8f"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="GRW-lE-vgC"/>
+                    <connections>
+                        <outletCollection property="userMode" destination="vmP-Qe-mLE" collectionClass="NSMutableArray" id="3PT-9t-zqV"/>
+                        <outletCollection property="userMode" destination="7hW-Hn-tMg" collectionClass="NSMutableArray" id="qBK-gA-UGH"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BmA-Bj-52T" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1544.9275362318842" y="-680.35714285714278"/>
+            <point key="canvasLocation" x="1449" y="66"/>
         </scene>
         <!--Mood-->
         <scene sceneID="xa8-I4-erm">
             <objects>
-                <viewController id="70i-ur-SdU" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MoodRatingViewController" id="70i-ur-SdU" customClass="MoodRatingViewController" customModule="Listener" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hU7-bK-Z4d">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -398,6 +381,9 @@
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N7b-wv-Esp">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="110"/>
+                                                <connections>
+                                                    <action selector="moodRatingSelected:" destination="70i-ur-SdU" eventType="touchUpInside" id="ro4-pj-IXX"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -458,6 +444,9 @@
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yoc-vD-4PP">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="110"/>
+                                                <connections>
+                                                    <action selector="moodRatingSelected:" destination="70i-ur-SdU" eventType="touchUpInside" id="spL-Cg-Ira"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -518,6 +507,9 @@
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cAe-Hs-ft6">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="110"/>
+                                                <connections>
+                                                    <action selector="moodRatingSelected:" destination="70i-ur-SdU" eventType="touchUpInside" id="DPe-Ya-Tgi"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -578,6 +570,9 @@
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PT7-aq-k9E">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="110"/>
+                                                <connections>
+                                                    <action selector="moodRatingSelected:" destination="70i-ur-SdU" eventType="touchUpInside" id="PLI-2V-deK"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -638,6 +633,9 @@
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x6i-HW-V2f">
                                                 <rect key="frame" x="0.0" y="0.0" width="374" height="110"/>
+                                                <connections>
+                                                    <action selector="moodRatingSelected:" destination="70i-ur-SdU" eventType="touchUpInside" id="FsD-T8-rOh"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -698,10 +696,22 @@
                         <viewLayoutGuide key="safeArea" id="cY2-SS-zLn"/>
                     </view>
                     <navigationItem key="navigationItem" title="Mood" id="F1M-CE-3BD"/>
+                    <connections>
+                        <outletCollection property="moodRatings" destination="x6i-HW-V2f" collectionClass="NSMutableArray" id="nbq-WO-jCZ"/>
+                        <outletCollection property="moodRatings" destination="PT7-aq-k9E" collectionClass="NSMutableArray" id="EYr-fV-An7"/>
+                        <outletCollection property="moodRatings" destination="cAe-Hs-ft6" collectionClass="NSMutableArray" id="6zG-LA-9KV"/>
+                        <outletCollection property="moodRatings" destination="yoc-vD-4PP" collectionClass="NSMutableArray" id="SWP-QD-0q5"/>
+                        <outletCollection property="moodRatings" destination="N7b-wv-Esp" collectionClass="NSMutableArray" id="Lbf-K4-1yS"/>
+                        <outletCollection property="moodViews" destination="kw0-ez-JEa" collectionClass="NSMutableArray" id="Q4q-lG-H2P"/>
+                        <outletCollection property="moodViews" destination="hiD-Xo-bBc" collectionClass="NSMutableArray" id="hdu-T6-6yC"/>
+                        <outletCollection property="moodViews" destination="PUq-Ni-WK5" collectionClass="NSMutableArray" id="3ti-Nq-pDs"/>
+                        <outletCollection property="moodViews" destination="LYH-5K-ZFs" collectionClass="NSMutableArray" id="Brb-Bn-tVm"/>
+                        <outletCollection property="moodViews" destination="5mJ-Zm-QMu" collectionClass="NSMutableArray" id="b0L-E0-17f"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="15s-JN-AMr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2434.7826086956525" y="-675"/>
+            <point key="canvasLocation" x="2233" y="66"/>
         </scene>
         <!--Home View Controller-->
         <scene sceneID="6DR-zo-5oC">
@@ -715,7 +725,7 @@
                     </tabBar>
                     <connections>
                         <segue destination="CEq-5I-4tr" kind="relationship" relationship="viewControllers" id="I82-Ip-m3C"/>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="f4K-GJ-aJ1"/>
+                        <segue destination="g2R-yy-zag" kind="relationship" relationship="viewControllers" id="OAf-cf-MXm"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rp1-A7-WLR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1080,27 +1090,27 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aGs-zc-JOl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3147.826086956522" y="-675"/>
+            <point key="canvasLocation" x="2986" y="66"/>
         </scene>
-        <!--Buffer View Controller-->
+        <!--View Controller-->
         <scene sceneID="stn-fl-wCs">
             <objects>
-                <viewController id="Ep8-QB-a5C" customClass="LBufferViewController" customModule="Listener" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Ep8-QB-a5C" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZIF-9j-uUO">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Ms0-yj-W2i">
-                                <rect key="frame" x="99.5" y="501" width="215" height="55"/>
+                                <rect key="frame" x="119" y="501" width="176.5" height="55"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Finding your listener." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d7R-c5-0Z2">
-                                        <rect key="frame" x="0.0" y="0.0" width="215" height="26.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Searching Users." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d7R-c5-0Z2">
+                                        <rect key="frame" x="0.0" y="0.0" width="176.5" height="26.5"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Another note here." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pb1-fi-ksV">
-                                        <rect key="frame" x="0.0" y="34.5" width="215" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="34.5" width="176.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -1137,13 +1147,10 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="YID-4c-lCl"/>
                     </view>
-                    <connections>
-                        <outlet property="activityIndicator" destination="mKn-p2-G6P" id="jRj-Pk-1my"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VTq-5I-An2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3868" y="-675"/>
+            <point key="canvasLocation" x="2232" y="-638"/>
         </scene>
         <!--User Rating View Controller-->
         <scene sceneID="nJS-u6-G3S">
@@ -1284,7 +1291,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vXC-SE-nfO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4837.68115942029" y="-675"/>
+            <point key="canvasLocation" x="5375" y="66"/>
         </scene>
         <!--Did Connect View Controller-->
         <scene sceneID="2Nh-7e-z1a">
@@ -1370,7 +1377,70 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VSz-Gq-bcr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5621.739130434783" y="-675"/>
+            <point key="canvasLocation" x="3035" y="-638"/>
+        </scene>
+        <!--Buffer View Controller-->
+        <scene sceneID="ljd-fy-zkn">
+            <objects>
+                <viewController id="C6S-Qx-lxP" customClass="LBufferViewController" customModule="Listener" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xqp-pg-dTD">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="BLt-UP-LyI">
+                                <rect key="frame" x="99.5" y="501" width="215" height="55"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Finding your listener." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="21b-eE-LJe">
+                                        <rect key="frame" x="0.0" y="0.0" width="215" height="26.5"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Another note here." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pD1-RR-wU2">
+                                        <rect key="frame" x="0.0" y="34.5" width="215" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xOg-Ui-Unx" customClass="NVActivityIndicatorView" customModule="NVActivityIndicatorView">
+                                <rect key="frame" x="162" y="403" width="90" height="90"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="90" id="H2j-B9-RWY"/>
+                                    <constraint firstAttribute="width" constant="90" id="fH7-cZ-OAl"/>
+                                </constraints>
+                            </view>
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WUs-92-nvR">
+                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                                <color key="barTintColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <items>
+                                    <navigationItem id="RNK-oW-uNs">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="A6X-zI-fFV"/>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="WUs-92-nvR" firstAttribute="trailing" secondItem="l4C-ZA-lqL" secondAttribute="trailing" id="62u-4Z-Rrt"/>
+                            <constraint firstItem="xOg-Ui-Unx" firstAttribute="centerY" secondItem="xqp-pg-dTD" secondAttribute="centerY" id="7y3-EQ-KWJ"/>
+                            <constraint firstItem="BLt-UP-LyI" firstAttribute="top" secondItem="xOg-Ui-Unx" secondAttribute="bottom" constant="8" id="Dde-3D-GJh"/>
+                            <constraint firstItem="WUs-92-nvR" firstAttribute="leading" secondItem="l4C-ZA-lqL" secondAttribute="leading" id="W0m-Tu-CcV"/>
+                            <constraint firstItem="WUs-92-nvR" firstAttribute="top" secondItem="l4C-ZA-lqL" secondAttribute="top" id="WBU-jA-UtS"/>
+                            <constraint firstItem="xOg-Ui-Unx" firstAttribute="centerX" secondItem="xqp-pg-dTD" secondAttribute="centerX" id="kWr-bj-fz2"/>
+                            <constraint firstItem="BLt-UP-LyI" firstAttribute="centerX" secondItem="xqp-pg-dTD" secondAttribute="centerX" id="zse-gm-C1C"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="l4C-ZA-lqL"/>
+                    </view>
+                    <connections>
+                        <outlet property="activityIndicator" destination="xOg-Ui-Unx" id="L37-Rf-dJ6"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1wt-a8-9tS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3764" y="66"/>
         </scene>
     </scenes>
     <resources>

@@ -21,8 +21,10 @@ class UserModeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+
         // Do any additional setup after loading the view.
     }
+
     
     @IBAction func userModeSelected(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
