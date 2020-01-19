@@ -134,8 +134,8 @@ class ChatViewController: UIViewController {
             // configure speaker
             configSpeaker()
         }
-        readMessage()
-        print("JUST READ MESSAGE")
+//        readMessage()
+//        print("JUST READ MESSAGE")
         // DEST1
     }
     
@@ -160,6 +160,8 @@ class ChatViewController: UIViewController {
                     print("AAAAAA \(self.speakerUID)")
                     // DEST2
                     self.configListener(messageCount: otherMessageCount)
+                    self.readMessage()
+                    print("JUST READ MESSAGE")
                     break
                 }
                 
@@ -220,7 +222,7 @@ class ChatViewController: UIViewController {
 //
 //        }
         
-        print("speakerUID")
+        print("speakerUID: \(speakerUID)")
         chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(DataEventType.childAdded) { (snapshot) in
             print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
         }
@@ -274,6 +276,7 @@ class ChatViewController: UIViewController {
         LM_UA_OCC = listenerMode + currStatus + chatOccupied
         configSpeaker()
         clearChatHistory()
+        // RIGHT HERE: SEND LAST MESSAGE TO OTHER USER TO INDICATE DISCONNECT
         currUser.messageCount = 0
         // segue to homeVC (tab bar)
         dismiss(animated: true, completion: nil)
