@@ -136,6 +136,7 @@ class ChatViewController: UIViewController {
         }
         readMessage()
         print("JUST READ MESSAGE")
+        // DEST1
     }
     
     func findActiveSpeaker() {
@@ -157,7 +158,9 @@ class ChatViewController: UIViewController {
 //                    self.configChat()
                     self.speakerUID = otherUID
                     print("AAAAAA \(self.speakerUID)")
+                    // DEST2
                     self.configListener(messageCount: otherMessageCount)
+                    break
                 }
                 
                 // HANDLE NO MATCH!!!!!!!!
@@ -216,7 +219,8 @@ class ChatViewController: UIViewController {
 //            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
 //
 //        }
-
+        
+        print("speakerUID")
         chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(DataEventType.childAdded) { (snapshot) in
             print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
         }
@@ -269,10 +273,40 @@ class ChatViewController: UIViewController {
         currStatus = "0"
         LM_UA_OCC = listenerMode + currStatus + chatOccupied
         configSpeaker()
+        clearChatHistory()
         currUser.messageCount = 0
-
         // segue to homeVC (tab bar)
         dismiss(animated: true, completion: nil)
+    }
+    
+    func clearChatHistory() {
+        let chat = self.rootRef.child("chat")
+        chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observeSingleEvent(of: DataEventType.value) { (snapshot) in
+        //            if snapshot.exists() {
+        //                snapshot.
+        //            }
+            
+            for child in snapshot.children {
+                let snap = child as! DataSnapshot
+                snap.ref.parent?.removeValue()
+                let dict = snap.value as! [String: Any]
+                let otherUID = dict["UID"] as! String
+                let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
+                let otherMessageCount = dict["MessageCount"] as! Int
+                
+                // match found
+                if otherLM_UA_OCC == "010" {
+        //                    self.configChat()
+                    self.speakerUID = otherUID
+                    // DEST2
+                    self.configListener(messageCount: otherMessageCount)
+                }
+                
+                // HANDLE NO MATCH!!!!!!!!
+                // set boolean or lock keyboard so that listener cannot send message if not occupied
+
+              }
+        }
     }
     
 //    func setUserStatus(status: Bool) {
