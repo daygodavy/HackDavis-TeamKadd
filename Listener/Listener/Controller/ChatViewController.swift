@@ -135,6 +135,10 @@ class ChatViewController: UIViewController {
     func findActiveSpeaker() {
         let chat = self.rootRef.child("chat")
         chat.queryOrdered(byChild: "LM_UA_OCC").queryEqual(toValue: "010").observeSingleEvent(of: DataEventType.value) { (snapshot) in
+//            if snapshot.exists() {
+//                snapshot.
+//            }
+            
             for child in snapshot.children {
                 let snap = child as! DataSnapshot
                 let dict = snap.value as! [String: Any]
@@ -146,10 +150,12 @@ class ChatViewController: UIViewController {
                 if otherLM_UA_OCC == "010" {
 //                    self.configChat()
                     self.speakerUID = otherUID
+                    print("AAAAAA \(self.speakerUID)")
                     self.configListener(messageCount: otherMessageCount)
                 }
                 
                 // HANDLE NO MATCH!!!!!!!!
+                // set boolean or lock keyboard so that listener cannot send message if not occupied
                 print("!!!!!OTHER USER: \(otherUID), \(otherMessageCount)")
               }
             
@@ -170,7 +176,7 @@ class ChatViewController: UIViewController {
 //        if let user = user?.uid {
         let chat = self.rootRef.child("chat").childByAutoId()
         
-        chat.updateChildValues(["UID" : speakerUID])
+        chat.updateChildValues(["UID" : self.speakerUID])
         chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
         // no text first message?
 //            chat.updateChildValues(["Text" : ])
@@ -195,29 +201,30 @@ class ChatViewController: UIViewController {
         }
     }
     
-    func readMessage() {
-        rootRef.child("chat").queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(.value, with:{ (snapshot: DataSnapshot) in
-                for child in snapshot.children {
-                    let snap = child as! DataSnapshot
-                    let dict = snap.value as! [String: Any]
-//                    let otherUID = dict["UID"] as! String
-                    let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
-                    let otherMessageCount = dict["MessageCount"] as! Int
-                    let otherMessage = dict["Text"] as! String
-                    print("otherMessage!!!!!!!: \(otherMessage)")
-
-//                    // match found
-//                    if otherLM_UA_OCC == "010" {
-//                    //                    self.configChat()
-//                        self.speakerUID = otherUID
-//                        self.configListener(messageCount: otherMessageCount)
-//                    }
+//    func readMessage() {
+//        rootRef.child("chat").queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(.value, with:{ (snapshot: DataSnapshot) in
+//            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
+//                for child in snapshot.children {
+//                    let snap = child as! DataSnapshot
+//                    let dict = snap.value as! [String: Any]
+////                    let otherUID = dict["UID"] as! String
+//                    let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
+//                    let otherMessageCount = dict["MessageCount"] as! Int
+//                    let otherMessage = dict["Text"] as! String
+//                    print("otherMessage!!!!!!!: \(otherMessage)")
 //
-//                    // HANDLE NO MATCH!!!!!!!!
-//                    print("!!!!!OTHER USER: \(otherUID), \(otherMessageCount)")
-                }
-        })
-    }
+////                    // match found
+////                    if otherLM_UA_OCC == "010" {
+////                    //                    self.configChat()
+////                        self.speakerUID = otherUID
+////                        self.configListener(messageCount: otherMessageCount)
+////                    }
+////
+////                    // HANDLE NO MATCH!!!!!!!!
+////                    print("!!!!!OTHER USER: \(otherUID), \(otherMessageCount)")
+//                }
+//        })
+//    }
     
     func enableActivityMonitor() {
         let notificationCenter = NotificationCenter.default
