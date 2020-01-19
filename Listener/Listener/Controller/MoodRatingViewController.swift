@@ -14,6 +14,7 @@ class MoodRatingViewController: UIViewController {
     
     // Idx 0-4 corresponds to ratings 1-5
     @IBOutlet var moodRatings: [UIButton]!
+    @IBOutlet var moodViews: [UIView]!
     var currUser: User = User()
     // Firebase
     let rootRef = Database.database().reference(fromURL: "https://teamkaddhackdavis2020.firebaseio.com/")
@@ -26,7 +27,8 @@ class MoodRatingViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+
+        let appDelegate = UIApplication.shared.delegate as!  AppDelegate
         moodList = appDelegate.persistentContainer.viewContext
         let request = NSFetchRequest<NSFetchRequestResult> (entityName: "Mood")
 
@@ -53,6 +55,12 @@ class MoodRatingViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    override func viewWillLayoutSubviews() {
+        for button in moodViews{
+            print("button")
+            button.layer.cornerRadius = 15.0
+        }
+    }
     func checkExistingUser() {
         Auth.auth().signInAnonymously() { (authResult, error) in
           // ...

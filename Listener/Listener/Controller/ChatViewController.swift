@@ -18,8 +18,8 @@ class ChatViewController: UIViewController {
     @IBOutlet weak var messageBottomConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var messageView: UIView!
-    @IBOutlet weak var leadingMessageConstraint: NSLayoutConstraint!
-    @IBOutlet weak var trailingMessageConstraint: NSLayoutConstraint!
+
+    @IBOutlet weak var disconnectButton: UIBarButtonItem!
     
     // Firebase
     let rootRef = Database.database().reference(fromURL: "https://teamkaddhackdavis2020.firebaseio.com/")
@@ -61,6 +61,33 @@ class ChatViewController: UIViewController {
     }
     
     // MARK: - Actions
+    @IBAction func didTapDisconnect(_ sender: Any) {
+        let alert = UIAlertController(title: "Disconnect from user?", message: "", preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "Confirm", style: .default, handler: { _ in
+            // end chat
+            self.currStatus = "0"
+            self.LM_UA_OCC = self.listenerMode + self.currStatus + self.chatOccupied
+            self.configSpeaker()
+            self.clearChatHistory()
+            // RIGHT HERE: SEND LAST MESSAGE TO OTHER USER TO INDICATE DISCONNECT
+            self.currUser.messageCount = 0
+            
+            // segue to rating if speaker
+            if (self.listenerMode == "1") {
+                let storyboard  = UIStoryboard(name: "Main", bundle: nil)
+                let vc = storyboard.instantiateViewController(identifier: "UserRating") as UserRatingViewController
+                vc.modalPresentationStyle = .fullScreen
+                self.present(vc, animated: true, completion: nil)
+            } else {
+                self.dismiss(animated: true, completion: nil)
+            }
+            
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true)
+    }
     @IBAction func didTapSend(_ sender: Any) {
         // unwrap textfield
         guard let text = messageTF.text else {return}
