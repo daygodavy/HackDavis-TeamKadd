@@ -35,8 +35,14 @@ class MoodRatingViewController: UIViewController {
             result = try moodList.fetch(request)
             dataExist = true
             let dataSort = NSSortDescriptor(key: "date", ascending: true)
-            result = (result as NSArray).sortedArray(using: [dataSort]) as! [NSFetchRequestResult]
-            
+            let nresult = (result as NSArray).sortedArray(using: [dataSort]) as! [NSManagedObject]
+            for res in result {
+                print(res)
+            }
+            if (10 < result.count){
+                moodList.delete(nresult[0])
+                print("deleting")
+            }
             print("Data feteched")
         } catch {
             print("Failed to fetch data")
