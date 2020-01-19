@@ -25,7 +25,12 @@ class ChatViewController: UIViewController {
     let rootRef = Database.database().reference(fromURL: "https://teamkaddhackdavis2020.firebaseio.com/")
     var user = Auth.auth().currentUser
     
-    
+    var currUser = User()
+    var listenerMode: String = "0"
+    var currStatus: String = "1"
+    var chatOccupied: String = "0"
+    var LM_UA_OCC: String = "000"
+    var speakerUID: String = ""
     
     var sentMessages = [Message]()
     var receivedMessages = [Message]()
@@ -44,7 +49,10 @@ class ChatViewController: UIViewController {
         messageView.layer.cornerRadius = 15.0
         addObservers()
         enableActivityMonitor()
-        setUserStatus(status: true)
+        configUserChat()
+        // FOR SPEAKER: FIRST EMPTY MESSAGE WITH FLAGS
+
+//        setUserStatus(status: true)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -64,10 +72,13 @@ class ChatViewController: UIViewController {
         conversation.insert(message, at: 0)
         tableView.reloadData()
         messageTF.text = ""
-        generateMessage()
+        storeMessage(message: text)
+//        generateMessage()
     }
     
     // MARK: - Private Functions
+    
+    
     func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -86,32 +97,199 @@ class ChatViewController: UIViewController {
         }
     }
     
-    func generateMessage() {
-        let message = Message(body: "Hello, Daniel. How is it going? You look very nice this evening.", wasSent: false)
+    func generateMessage(text: String) {
+//        let message = Message(body: "Hello, Daniel. How is it going? You look very nice this evening.", wasSent: false)
+        let message = Message(body: text, wasSent: false)
        // let message = "Target Acquirred"
         conversation.insert(message, at: 0)
         tableView.reloadData()
     }
     
+    func storeMessage(message: String) {
+        currUser.messageCount += 1
+            if let user = user?.uid {
+                let chat = self.rootRef.child("chat").childByAutoId()
+    //            chat.childByAutoId()
+                LM_UA_OCC = listenerMode + currStatus + chatOccupied
+                print("STORE1")
+                //***** CHANGE OCCUPIED WHEN CONNECTED
+                chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
+                print("STORE2")
+                // no text first message?
+                chat.updateChildValues(["Text" : message])
+                print("STORE3")
+                chat.updateChildValues(["MessageCount" : currUser.messageCount])
+                print("STORE4")
+                chat.updateChildValues(["UID" : speakerUID])
+            }
+    }
+    
+    func configUserChat() {
+        LM_UA_OCC = listenerMode + currStatus + chatOccupied
+        // FOR SPEAKER: FIRST EMPTY MESSAGE WITH FLAGS
+        if listenerMode == "1" {
+            // configure listener
+            findActiveSpeaker()
+            
+//            configListener()
+        }
+        else {
+            // configure speaker
+            configSpeaker()
+        }
+//        readMessage()
+//        print("JUST READ MESSAGE")
+        // DEST1
+    }
+    
+    func findActiveSpeaker() {
+        let chat = self.rootRef.child("chat")
+        chat.queryOrdered(byChild: "LM_UA_OCC").queryEqual(toValue: "010").observeSingleEvent(of: DataEventType.value) { (snapshot) in
+//            if snapshot.exists() {
+//                snapshot.
+//            }
+            
+            for child in snapshot.children {
+                let snap = child as! DataSnapshot
+                let dict = snap.value as! [String: Any]
+                let otherUID = dict["UID"] as! String
+                let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
+                let otherMessageCount = dict["MessageCount"] as! Int
+                
+                // match found
+                if otherLM_UA_OCC == "010" {
+//                    self.configChat()
+                    self.speakerUID = otherUID
+                    print("AAAAAA \(self.speakerUID)")
+                    // DEST2
+                    self.configListener(messageCount: otherMessageCount)
+                    self.readMessage()
+                    print("JUST READ MESSAGE")
+                    break
+                }
+                
+                // HANDLE NO MATCH!!!!!!!!
+                // set boolean or lock keyboard so that listener cannot send message if not occupied
+                print("!!!!!OTHER USER: \(otherUID), \(otherMessageCount)")
+              }
+            
+            // HANDLE NO MATCH HERE
+//            if snapshot.exists() {
+//
+//            }
+//            else {
+//                // no active speakers or no unoccupied chatrooms
+//            }
+        }
+    }
+    
+    func configListener(messageCount: Int) {
+        currUser.messageCount = messageCount + 1
+        chatOccupied = "1"
+        LM_UA_OCC = listenerMode + currStatus + chatOccupied
+//        if let user = user?.uid {
+        let chat = self.rootRef.child("chat").childByAutoId()
+        
+//        chat.updateChildValues(["UID" : self.speakerUID])
+        print("HERE1")
+        chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
+        print("HERE2")
+        // no text first message?
+            chat.updateChildValues(["Text" : " "])
+        chat.updateChildValues(["MessageCount" : currUser.messageCount])
+        print("HERE3")
+        chat.updateChildValues(["UID" : self.speakerUID])
+//        }
+    }
+    
+    func configSpeaker() {
+        // initiate "first" chat message
+        currUser.messageCount += 1
+//        LM_UA_OCC = listenerMode + currStatus + chatOccupied
+        if let user = user?.uid {
+            self.speakerUID = user
+            let chat = self.rootRef.child("chat").childByAutoId()
+//            chat.childByAutoId()
+            
+            chat.updateChildValues(["UID" : speakerUID])
+            chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
+            // no text first message?
+            chat.updateChildValues(["Text" : " "])
+            chat.updateChildValues(["MessageCount" : currUser.messageCount])
+            self.readMessage()
+        }
+    }
+    
+    func readMessage() {
+
+        let chat = self.rootRef.child("chat")
+
+        print("speakerUID: \(speakerUID)")
+        chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(DataEventType.childAdded) { (snapshot) in
+            let snap = snapshot as! DataSnapshot
+            let dict = snap.value as! [String: Any]
+            print(dict)
+            let newCount = dict["MessageCount"] as! Int
+            var otherUID = dict["LM_UA_OCC"] as! String
+            let newMessage = dict["Text"] as! String
+            var userType = otherUID.removeFirst()
+            if String(userType) != self.listenerMode {
+                self.generateMessage(text: newMessage)
+            }
+            
+        }
+        
+    }
+    
     func enableActivityMonitor() {
         let notificationCenter = NotificationCenter.default
-//        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
     }
     
     @objc func appMovedToBackground() {
         print("App moved to background!")
-        setUserStatus(status: false)
+        // SEND BLANK MESSAGE FOR DISABLING CHAT... ACTIVE = FALSE
+//        configSpeaker(disable: true)
+        currStatus = "0"
+        LM_UA_OCC = listenerMode + currStatus + chatOccupied
+        configSpeaker()
+        clearChatHistory()
+        // RIGHT HERE: SEND LAST MESSAGE TO OTHER USER TO INDICATE DISCONNECT
+        currUser.messageCount = 0
         // segue to homeVC (tab bar)
         dismiss(animated: true, completion: nil)
     }
     
-    func setUserStatus(status: Bool) {
-        if let uid = user?.uid {
-            let users = self.rootRef.child("users")
-            users.child(uid).updateChildValues(["userActive" : status])
+    func clearChatHistory() {
+        let chat = self.rootRef.child("chat")
+        chat.queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observeSingleEvent(of: DataEventType.value) { (snapshot) in
+        //            if snapshot.exists() {
+        //                snapshot.
+        //            }
+            
+            for child in snapshot.children {
+                let snap = child as! DataSnapshot
+                snap.ref.parent?.removeValue()
+                let dict = snap.value as! [String: Any]
+                let otherUID = dict["UID"] as! String
+                let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
+                let otherMessageCount = dict["MessageCount"] as! Int
+                
+                // match found
+                if otherLM_UA_OCC == "010" {
+        //                    self.configChat()
+                    self.speakerUID = otherUID
+                    // DEST2
+                    self.configListener(messageCount: otherMessageCount)
+                }
+                
+                // HANDLE NO MATCH!!!!!!!!
+                // set boolean or lock keyboard so that listener cannot send message if not occupied
+
+              }
         }
     }
+    
 
 }
 
