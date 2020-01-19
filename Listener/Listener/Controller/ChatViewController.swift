@@ -30,6 +30,7 @@ class ChatViewController: UIViewController {
     var currStatus: String = "1"
     var chatOccupied: String = "0"
     var LM_UA_OCC: String = "000"
+    var speakerUID: String = ""
     
     var sentMessages = [Message]()
     var receivedMessages = [Message]()
@@ -110,12 +111,9 @@ class ChatViewController: UIViewController {
                 chat.updateChildValues(["UID" : user])
                 //***** CHANGE OCCUPIED WHEN CONNECTED
                 chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
-//                chat.updateChildValues(["ListenerMode" : listenerMode])
-//                chat.updateChildValues(["UserActive" : currStatus])
                 // no text first message?
                 chat.updateChildValues(["Text" : message])
                 chat.updateChildValues(["MessageCount" : currUser.messageCount])
-//                chat.updateChildValues(["Occupied" : false])
             }
     }
     
@@ -125,6 +123,7 @@ class ChatViewController: UIViewController {
         if listenerMode == "1" {
             // configure listener
             findActiveSpeaker()
+            
 //            configListener()
         }
         else {
@@ -140,15 +139,21 @@ class ChatViewController: UIViewController {
                 let snap = child as! DataSnapshot
                 let dict = snap.value as! [String: Any]
                 let otherUID = dict["UID"] as! String
-//                  let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
+                let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
                 let otherMessageCount = dict["MessageCount"] as! Int
-                  // if matching phone number exists
-//                if phoneNum == self.otherUserPhoneNum {
-//                  matchingNum = true
-//                  self.segueToUserWL(userId: uid, fn: firstName, ln: lastName, userNum: phoneNum)
-//                }
+                
+                // match found
+                if otherLM_UA_OCC == "010" {
+//                    self.configChat()
+                    self.speakerUID = otherUID
+                    self.configListener(messageCount: otherMessageCount)
+                }
+                
+                // HANDLE NO MATCH!!!!!!!!
                 print("!!!!!OTHER USER: \(otherUID), \(otherMessageCount)")
               }
+            
+            // HANDLE NO MATCH HERE
 //            if snapshot.exists() {
 //
 //            }
@@ -156,32 +161,61 @@ class ChatViewController: UIViewController {
 //                // no active speakers or no unoccupied chatrooms
 //            }
         }
-//        let ref = defaultDB.reference.child("usernames")
-//        ref.queryOrdered(byChild: "username").queryEqual(toValue: "sean").observeSingleEvent(of: DataEventType.value) { (snapshot) in
-//            if snapshot.exists() {
-//                print("exists")
-//            }
-//            else {
-//                print("doesn't exist")
-//            }
+    }
+    
+    func configListener(messageCount: Int) {
+        currUser.messageCount = messageCount + 1
+//        if let user = user?.uid {
+        let chat = self.rootRef.child("chat").childByAutoId()
+        
+        chat.updateChildValues(["UID" : speakerUID])
+        chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
+        // no text first message?
+//            chat.updateChildValues(["Text" : ])
+        chat.updateChildValues(["MessageCount" : currUser.messageCount])
 //        }
     }
     
     func configSpeaker() {
         // initiate "first" chat message
         currUser.messageCount += 1
+        chatOccupied = "1"
+        LM_UA_OCC = listenerMode + currStatus + chatOccupied
         if let user = user?.uid {
+            self.speakerUID = user
             let chat = self.rootRef.child("chat").childByAutoId()
 //            chat.childByAutoId()
-            chat.updateChildValues(["UID" : user])
+            
+            chat.updateChildValues(["UID" : speakerUID])
             chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
-//            chat.updateChildValues(["ListenerMode" : listenerMode])
-//            chat.updateChildValues(["UserActive" : currStatus])
             // no text first message?
 //            chat.updateChildValues(["Text" : ])
             chat.updateChildValues(["MessageCount" : currUser.messageCount])
-//            chat.updateChildValues(["Occupied" : false])
         }
+    }
+    
+    func readMessage() {
+        rootRef.child("chat").queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(.value, with:{ (snapshot: DataSnapshot) in
+                for child in snapshot.children {
+                    let snap = child as! DataSnapshot
+                    let dict = snap.value as! [String: Any]
+//                    let otherUID = dict["UID"] as! String
+                    let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
+                    let otherMessageCount = dict["MessageCount"] as! Int
+                    let otherMessage = dict["Text"] as! String
+                    
+
+//                    // match found
+//                    if otherLM_UA_OCC == "010" {
+//                    //                    self.configChat()
+//                        self.speakerUID = otherUID
+//                        self.configListener(messageCount: otherMessageCount)
+//                    }
+//
+//                    // HANDLE NO MATCH!!!!!!!!
+//                    print("!!!!!OTHER USER: \(otherUID), \(otherMessageCount)")
+                }
+        })
     }
     
     func enableActivityMonitor() {
@@ -196,7 +230,7 @@ class ChatViewController: UIViewController {
         currStatus = "0"
         LM_UA_OCC = listenerMode + currStatus + chatOccupied
         configSpeaker()
-        
+        currUser.messageCount = 0
 
         // segue to homeVC (tab bar)
         dismiss(animated: true, completion: nil)
