@@ -201,30 +201,30 @@ class ChatViewController: UIViewController {
         }
     }
     
-//    func readMessage() {
-//        rootRef.child("chat").queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(.value, with:{ (snapshot: DataSnapshot) in
-//            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
-//                for child in snapshot.children {
-//                    let snap = child as! DataSnapshot
-//                    let dict = snap.value as! [String: Any]
-////                    let otherUID = dict["UID"] as! String
-//                    let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
-//                    let otherMessageCount = dict["MessageCount"] as! Int
-//                    let otherMessage = dict["Text"] as! String
-//                    print("otherMessage!!!!!!!: \(otherMessage)")
+    func readMessage() {
+        rootRef.child("chat").queryOrdered(byChild: "UID").queryEqual(toValue: speakerUID).observe(.value, with:{ (snapshot: DataSnapshot) in
+            print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
+                for child in snapshot.children {
+                    let snap = child as! DataSnapshot
+                    let dict = snap.value as! [String: Any]
+//                    let otherUID = dict["UID"] as! String
+                    let otherLM_UA_OCC = dict["LM_UA_OCC"] as! String
+                    let otherMessageCount = dict["MessageCount"] as! Int
+                    let otherMessage = dict["Text"] as! String
+                    print("otherMessage!!!!!!!: \(otherMessage)")
+
+//                    // match found
+//                    if otherLM_UA_OCC == "010" {
+//                    //                    self.configChat()
+//                        self.speakerUID = otherUID
+//                        self.configListener(messageCount: otherMessageCount)
+//                    }
 //
-////                    // match found
-////                    if otherLM_UA_OCC == "010" {
-////                    //                    self.configChat()
-////                        self.speakerUID = otherUID
-////                        self.configListener(messageCount: otherMessageCount)
-////                    }
-////
-////                    // HANDLE NO MATCH!!!!!!!!
-////                    print("!!!!!OTHER USER: \(otherUID), \(otherMessageCount)")
-//                }
-//        })
-//    }
+//                    // HANDLE NO MATCH!!!!!!!!
+//                    print("!!!!!OTHER USER: \(otherUID), \(otherMessageCount)")
+                }
+        })
+    }
     
     func enableActivityMonitor() {
         let notificationCenter = NotificationCenter.default
