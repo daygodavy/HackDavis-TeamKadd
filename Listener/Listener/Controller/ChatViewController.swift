@@ -203,10 +203,11 @@ class ChatViewController: UIViewController {
     
     func readMessage() {
         let chat = self.rootRef.child("chat")
-        chat.observe(DataEventType.value) { (snapshot) in
+        chat.observe(DataEventType.childAdded) { (snapshot) in
             print("DBEIUWBFUEIWBFIUEWBFIEWFBIEUWBFIEWUBFIUE")
             
         }
+
 //        chat.queryOrdered(byChild: "LM_UA_OCC").queryEqual(toValue: "010").observeSingleEvent(of: DataEventType.value) { (snapshot) in
         
         
