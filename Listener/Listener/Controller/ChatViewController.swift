@@ -108,7 +108,7 @@ class ChatViewController: UIViewController {
                 let chat = self.rootRef.child("chat").childByAutoId()
     //            chat.childByAutoId()
                 LM_UA_OCC = listenerMode + currStatus + chatOccupied
-                chat.updateChildValues(["UID" : user])
+                chat.updateChildValues(["UID" : speakerUID])
                 //***** CHANGE OCCUPIED WHEN CONNECTED
                 chat.updateChildValues(["LM_UA_OCC" : LM_UA_OCC])
                 // no text first message?
